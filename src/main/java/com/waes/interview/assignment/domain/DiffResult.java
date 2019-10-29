@@ -8,9 +8,13 @@ public class DiffResult {
 
   private boolean configured;
 
-  private boolean equal;
+  private Boolean equal;
 
-  private boolean lengthEqual;
+  private Boolean lengthEqual;
 
   private List<DiffResultEntry> diffs;
+
+  public static DiffResult notConfigured() {
+    return new DiffResult();
+  }
 }

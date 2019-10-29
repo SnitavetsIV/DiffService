@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 public class DiffServiceImpl implements DiffService {
 
   private final DiffRepository repository;
+  private final DataDiffer<String> dataDiffer;
 
   @Autowired
-  public DiffServiceImpl(DiffRepository repository) {
+  public DiffServiceImpl(DiffRepository repository, DataDiffer<String> dataDiffer) {
     this.repository = repository;
+    this.dataDiffer = dataDiffer;
   }
 
   @Override
@@ -35,7 +37,9 @@ public class DiffServiceImpl implements DiffService {
 
   @Override
   public DiffResult fetchResult(DiffEntity diffEntity) {
-
-    return null;
+    if (diffEntity == null) {
+      return null;
+    }
+    return dataDiffer.calculateDiff(diffEntity.getLeft(), diffEntity.getRight());
   }
 }
