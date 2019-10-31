@@ -19,5 +19,4 @@ public class WaesAssignment {
   public static void main(String[] args) {
     SpringApplication.run(WaesAssignment.class, args);
   }
-
 }

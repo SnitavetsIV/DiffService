@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** Entity to hold information for differing */
 @Data
 @NoArgsConstructor
 @Entity
