@@ -2,8 +2,9 @@ package com.waes.interview.assignment.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 /** Entity to hold information regarding result of differing */
 @Data
