@@ -1,4 +1,4 @@
-Build status: [![CircleCI](https://circleci.com/gh/SnitavetsIV/DiffService/tree/master.svg?style=svg)](https://circleci.com/gh/SnitavetsIV/DiffService/tree/master)
+[![CircleCI](https://circleci.com/gh/SnitavetsIV/DiffService/tree/master.svg?style=svg)](https://circleci.com/gh/SnitavetsIV/DiffService/tree/master)
 
 # WAES Assignment Scalable Web App
  Codding task for WAES interview process
@@ -41,3 +41,4 @@ point
 - Implement OAuth 2 with several grant types to secure the endpoints
 - Store Diff results in DB to avoid performing the comparison again.
 - ELK stack to store logs
+- RabbitMQ implementation to perform data comparison asynchronously
