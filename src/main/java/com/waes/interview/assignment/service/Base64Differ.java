@@ -2,13 +2,15 @@ package com.waes.interview.assignment.service;
 
 import com.waes.interview.assignment.domain.DiffResult;
 import com.waes.interview.assignment.domain.DiffResultEntry;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /** Realisation for {@link DataDiffer} to differ Base64 data */
 @Service
+@Slf4j
 public class Base64Differ implements DataDiffer<String> {
 
   @Override
@@ -16,15 +18,25 @@ public class Base64Differ implements DataDiffer<String> {
     if (left == null || right == null) {
       return DiffResult.notConfigured();
     }
+    byte[] leftData;
+    byte[] rightData;
+
+    try {
+      leftData = Base64.getDecoder().decode(left);
+      rightData = Base64.getDecoder().decode(right);
+    } catch (IllegalArgumentException e) {
+      log.error("tried to decode not base 64 string", e);
+      return DiffResult.notConfigured();
+    }
     DiffResult result = new DiffResult();
     result.setConfigured(true);
-    if (left.length() != right.length()) {
+    if (leftData.length != rightData.length) {
       result.setEqual(false);
       result.setLengthEqual(false);
       return result;
     }
 
-    List<DiffResultEntry> differences = findDifferences(left, right);
+    List<DiffResultEntry> differences = findDifferences(leftData, rightData);
 
     result.setEqual(differences.isEmpty());
     result.setDiffs(differences);
@@ -39,12 +51,12 @@ public class Base64Differ implements DataDiffer<String> {
    * @param rightData - data of Right object
    * @return - List of Pair objects
    */
-  private List<DiffResultEntry> findDifferences(String leftData, String rightData) {
+  private List<DiffResultEntry> findDifferences(byte[] leftData, byte[] rightData) {
     ArrayList<DiffResultEntry> result = new ArrayList<>();
     boolean isDiff = false;
     int lastPosition = 0;
-    for (int i = 0; i < leftData.length(); i++) {
-      if (leftData.charAt(i) != rightData.charAt(i)) {
+    for (int i = 0; i < leftData.length; i++) {
+      if (leftData[i] != rightData[i]) {
         if (!isDiff) {
           isDiff = true;
           lastPosition = i;
@@ -58,7 +70,7 @@ public class Base64Differ implements DataDiffer<String> {
       }
     }
     if (isDiff) {
-      result.add(new DiffResultEntry(lastPosition, leftData.length() - lastPosition));
+      result.add(new DiffResultEntry(lastPosition, leftData.length - lastPosition));
     }
 
     return result;

@@ -12,6 +12,17 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    integrationTest {
+        java {
+            srcDir file('src/integration/java')
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir file('src/integration/resources')
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -25,9 +36,22 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
     runtimeOnly 'com.h2database:h2'
+    integrationTestCompile configurations.testCompile
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
     useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
 }
+
+
+task integrationTest(type: Test) {
+    systemProperty 'spring.profiles.active', 'test'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test

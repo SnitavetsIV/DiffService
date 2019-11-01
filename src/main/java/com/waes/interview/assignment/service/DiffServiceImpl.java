@@ -3,10 +3,9 @@ package com.waes.interview.assignment.service;
 import com.waes.interview.assignment.domain.DiffEntity;
 import com.waes.interview.assignment.domain.DiffResult;
 import com.waes.interview.assignment.repository.DiffRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class DiffServiceImpl implements DiffService {
@@ -39,7 +38,7 @@ public class DiffServiceImpl implements DiffService {
   @Override
   public DiffResult fetchResult(DiffEntity diffEntity) {
     if (diffEntity == null) {
-      return null;
+      return DiffResult.notConfigured();
     }
     return dataDiffer.calculateDiff(diffEntity.getLeft(), diffEntity.getRight());
   }
