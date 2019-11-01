@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ilya Snitavets
  */
 @SpringBootApplication
-public class WaesAssignment {
+public class WaesAssignmentApp {
 
   /**
    * Application entry point
@@ -17,6 +17,6 @@ public class WaesAssignment {
    * @param args command line arguments to pass to Spring Boot application
    */
   public static void main(String[] args) {
-    SpringApplication.run(WaesAssignment.class, args);
+    SpringApplication.run(WaesAssignmentApp.class, args);
   }
 }

@@ -35,6 +35,7 @@ public class Base64Differ implements DataDiffer<String> {
       result.setLengthEqual(false);
       return result;
     }
+    result.setLengthEqual(true);
 
     List<DiffResultEntry> differences = findDifferences(leftData, rightData);
 

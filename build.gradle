@@ -35,9 +35,16 @@ dependencies {
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-    runtimeOnly 'com.h2database:h2'
-    integrationTestCompile configurations.testCompile
+    implementation 'com.h2database:h2'
+
+    // Unit tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Integration tests
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    integrationTestImplementation 'com.h2database:h2'
 }
 
 test {

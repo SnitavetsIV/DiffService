@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: waes-assignment
+
+  # using in-memory database while testing
+  datasource:
+    url: jdbc:h2:mem:diffdb_test
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+
