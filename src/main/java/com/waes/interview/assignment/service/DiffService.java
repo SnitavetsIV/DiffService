@@ -2,7 +2,6 @@ package com.waes.interview.assignment.service;
 
 import com.waes.interview.assignment.domain.DiffEntity;
 import com.waes.interview.assignment.domain.DiffResult;
-
 import java.util.Optional;
 
 /** Service to manipulate {@link DiffEntity} object */

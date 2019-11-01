@@ -64,7 +64,8 @@ class Base64DifferTest {
   void calculateDiff_diffLength_notEqualLength() {
     // Given
     Base64Differ differ = new Base64Differ();
-    String right = "QmFzZTY0RGlmZmVyVGVzdCByaWdodCBiaWcgU3RyaW5n"; // "Base64DifferTest right big String"
+    String right =
+        "QmFzZTY0RGlmZmVyVGVzdCByaWdodCBiaWcgU3RyaW5n"; // "Base64DifferTest right big String"
     String left = "QmFzZTY0RGlmZmVyVGVzdCBsZWZ0IFN0cmluZw=="; // "Base64DifferTest left String"
 
     // When

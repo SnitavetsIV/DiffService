@@ -1,8 +1,7 @@
 package com.waes.interview.assignment.controller.dto;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  * Structure to store incoming request
