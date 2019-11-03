@@ -1,10 +1,10 @@
 package com.waes.interview.assignment.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import com.waes.interview.assignment.domain.DiffResult;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 class Base64DifferTest {
 

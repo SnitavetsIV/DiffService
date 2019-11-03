@@ -2,11 +2,12 @@ package com.waes.interview.assignment.service;
 
 import com.waes.interview.assignment.domain.DiffResult;
 import com.waes.interview.assignment.domain.DiffResultEntry;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /** Realisation for {@link DataDiffer} to differ Base64 data */
 @Service

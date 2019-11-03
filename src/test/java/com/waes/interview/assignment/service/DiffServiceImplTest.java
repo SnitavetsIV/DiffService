@@ -1,13 +1,12 @@
 package com.waes.interview.assignment.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import com.waes.interview.assignment.domain.DiffEntity;
 import com.waes.interview.assignment.domain.DiffResult;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 class DiffServiceImplTest {
 
