@@ -1,27 +1,26 @@
 package com.waes.interview.assignment.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.waes.interview.assignment.WaesAssignmentApp;
 import com.waes.interview.assignment.controller.dto.DiffOperand;
-import com.waes.interview.assignment.domain.DiffEntity;
 import com.waes.interview.assignment.domain.DiffResult;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WaesAssignmentApp.class)
@@ -35,12 +34,12 @@ public class DiffControllerIntegrationTest {
     return mapper.writeValueAsString(dto);
   }
 
-  private <T> T parseDto(MvcResult mvcResult, Class<T> type) throws IOException {
-    return mapper.readValue(mvcResult.getResponse().getContentAsString(), type);
+  private DiffResult parseDiffResultDto(MvcResult mvcResult) throws IOException {
+    return mapper.readValue(mvcResult.getResponse().getContentAsString(), DiffResult.class);
   }
 
   @Test
-  public void leftOperand_notExistId_validEntity() throws Exception {
+  public void leftOperand_notExistId_noError() throws Exception {
     // Given
     DiffOperand operand = new DiffOperand();
     long id = 1L;
@@ -53,15 +52,32 @@ public class DiffControllerIntegrationTest {
                     .content(toString(operand))
                     .contentType(MediaType.APPLICATION_JSON))
             .andReturn();
-    DiffEntity diffEntity = parseDto(mvcResult, DiffEntity.class);
 
     // Then
-    assertEquals(diffEntity.getId(), id);
-    assertEquals(diffEntity.getLeft(), operand.getValue());
+    assertEquals(mvcResult.getResponse().getStatus(), HttpStatus.CREATED.value());
   }
 
   @Test
-  public void rightOperand_existEntity_updatedOperand() throws Exception {
+  public void leftOperand_notValidBase64_BadRequest() throws Exception {
+    // Given
+    DiffOperand operand = new DiffOperand();
+    long id = 11L;
+    operand.setValue("Not Valid Base64 String");
+
+    // When
+    MvcResult mvcResult =
+        mvc.perform(
+                post("/v1/diff/" + id + "/left")
+                    .content(toString(operand))
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+
+    // Then
+    assertEquals(mvcResult.getResponse().getStatus(), HttpStatus.BAD_REQUEST.value());
+  }
+
+  @Test
+  public void rightOperand_existEntity_noError() throws Exception {
     // Given
     DiffOperand operand = new DiffOperand();
     long id = 2L;
@@ -82,11 +98,28 @@ public class DiffControllerIntegrationTest {
                     .content(toString(operand))
                     .contentType(MediaType.APPLICATION_JSON))
             .andReturn();
-    DiffEntity diffEntityUpdated = parseDto(mvcResultUpdated, DiffEntity.class);
 
     // Then
-    assertEquals(diffEntityUpdated.getId(), id);
-    assertEquals(diffEntityUpdated.getRight(), operand.getValue());
+    assertEquals(mvcResultUpdated.getResponse().getStatus(), HttpStatus.CREATED.value());
+  }
+
+  @Test
+  public void rightOperand_notValidBase64_BadRequest() throws Exception {
+    // Given
+    DiffOperand operand = new DiffOperand();
+    long id = 22L;
+    operand.setValue("Not Valid Base64 String");
+
+    // When
+    MvcResult mvcResult =
+        mvc.perform(
+                post("/v1/diff/" + id + "/right")
+                    .content(toString(operand))
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+
+    // Then
+    assertEquals(mvcResult.getResponse().getStatus(), HttpStatus.BAD_REQUEST.value());
   }
 
   @Test
@@ -104,7 +137,7 @@ public class DiffControllerIntegrationTest {
     // When
     MvcResult mvcResultDiff =
         mvc.perform(get("/v1/diff/" + id).content(toString(operand))).andReturn();
-    DiffResult diffResult = parseDto(mvcResultDiff, DiffResult.class);
+    DiffResult diffResult = parseDiffResultDto(mvcResultDiff);
 
     // Then
     assertFalse(diffResult.isConfigured());
@@ -133,7 +166,7 @@ public class DiffControllerIntegrationTest {
     // When
     MvcResult mvcResultDiff =
         mvc.perform(get("/v1/diff/" + id).content(toString(operand))).andReturn();
-    DiffResult diffResult = parseDto(mvcResultDiff, DiffResult.class);
+    DiffResult diffResult = parseDiffResultDto(mvcResultDiff);
 
     // Then
     assertTrue(diffResult.isConfigured());
@@ -165,7 +198,7 @@ public class DiffControllerIntegrationTest {
     // When
     MvcResult mvcResultDiff =
         mvc.perform(get("/v1/diff/" + id).content(toString(operand))).andReturn();
-    DiffResult diffResult = parseDto(mvcResultDiff, DiffResult.class);
+    DiffResult diffResult = parseDiffResultDto(mvcResultDiff);
 
     // Then
     assertTrue(diffResult.isConfigured());
@@ -196,41 +229,12 @@ public class DiffControllerIntegrationTest {
     // When
     MvcResult mvcResultDiff =
         mvc.perform(get("/v1/diff/" + id).content(toString(operand))).andReturn();
-    DiffResult diffResult = parseDto(mvcResultDiff, DiffResult.class);
+    DiffResult diffResult = parseDiffResultDto(mvcResultDiff);
 
     // Then
     assertTrue(diffResult.isConfigured());
     assertTrue(diffResult.getEqual());
     assertTrue(diffResult.getLengthEqual());
     assertTrue(diffResult.getDiffs().isEmpty());
-  }
-
-  @Test
-  public void fetchDiffResult_notBase64_notConfigured() throws Exception {
-    // Given
-    DiffOperand operand = new DiffOperand();
-    long id = 7L;
-    operand.setValue(
-        "QmFzZTY0RGlmZmVyVGVzdCBsb25nIGxvbmcgU3RyaW5n"); // "Base64DifferTest long long String"
-    mvc.perform(
-            post("/v1/diff/" + id + "/left")
-                .content(toString(operand))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andReturn();
-
-    operand.setValue("Base64DifferTest long long String");
-    mvc.perform(
-            post("/v1/diff/" + id + "/right")
-                .content(toString(operand))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andReturn();
-
-    // When
-    MvcResult mvcResultDiff =
-        mvc.perform(get("/v1/diff/" + id).content(toString(operand))).andReturn();
-    DiffResult diffResult = parseDto(mvcResultDiff, DiffResult.class);
-
-    // Then
-    assertFalse(diffResult.isConfigured());
   }
 }
