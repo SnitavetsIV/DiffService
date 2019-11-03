@@ -32,7 +32,7 @@ point
 - To run only unit tests: `./gradlew clean test`
 - To run only integration tests: `./gradlew clean integrationTest`
 - To package application run: `./gradlew clean bootJar` 
-- To open API Docs use this url `{host}:{port}/swagger-ui.html`
+- To open API Docs use this url `{host}:{port}/swagger-ui.html`, for example [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ## Authors
  - Ilya Snitavets - [LinkedIn](http://linkedin.com/in/ilya-snitavets)
